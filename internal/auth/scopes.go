@@ -3,16 +3,25 @@ package auth
 import "strings"
 
 // RecommendedLoginScopes is the default set of user OAuth scopes requested by
-// feishu-cli. The goal is to cover common search, messaging, wiki, calendar,
-// and task workflows in one authorization step.
+// feishu-cli. The goal is to cover the generic interactive feature set in one
+// authorization step, including docs browsing, wiki navigation, messaging,
+// calendar, and task workflows.
 var RecommendedLoginScopes = []string{
 	"offline_access",
 	"search:docs:read",
 	"search:message",
+	"drive:drive:readonly",
 	"drive:drive.search:readonly",
 	"drive:drive.metadata:readonly",
+	"space:document:retrieve",
+	"space:document:delete",
+	"docs:document.media:upload",
+	"docs:permission.member:create",
+	"docs:permission.member:retrieve",
+	"wiki:node:read",
 	"wiki:wiki:readonly",
 	"wiki:space:retrieve",
+	"docx:document",
 	"docx:document:readonly",
 	"calendar:calendar:read",
 	"calendar:calendar.event:read",
@@ -24,7 +33,9 @@ var RecommendedLoginScopes = []string{
 	"task:task:write",
 	"task:tasklist:read",
 	"task:tasklist:write",
+	"im:chat",
 	"im:message:readonly",
+	"im:message",
 	"im:message.group_msg:get_as_user",
 	"im:chat:read",
 	"im:chat.members:read",

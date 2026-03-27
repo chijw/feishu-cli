@@ -46,7 +46,7 @@ var listWikiNodesCmd = &cobra.Command{
 		pageSize, _ := cmd.Flags().GetInt("page-size")
 		output, _ := cmd.Flags().GetString("output")
 
-		nodes, _, _, err := client.ListWikiNodes(spaceID, parentToken, pageSize, "", resolveOptionalUserToken(cmd))
+		nodes, _, _, err := client.ListWikiNodes(spaceID, parentToken, pageSize, "", resolveOptionalUserTokenWithFallback(cmd))
 		if err != nil {
 			return err
 		}

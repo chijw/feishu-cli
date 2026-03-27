@@ -38,7 +38,7 @@ var listWikiSpacesCmd = &cobra.Command{
 		pageSize, _ := cmd.Flags().GetInt("page-size")
 		output, _ := cmd.Flags().GetString("output")
 
-		spaces, _, _, err := client.ListWikiSpaces(pageSize, "", resolveOptionalUserToken(cmd))
+		spaces, _, _, err := client.ListWikiSpaces(pageSize, "", resolveOptionalUserTokenWithFallback(cmd))
 		if err != nil {
 			return err
 		}
