@@ -41,6 +41,7 @@ tmp/
 temp/
 *.tmp
 *.log
+.local-dev/
 
 # 导出的资源文件
 assets/
