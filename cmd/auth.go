@@ -21,6 +21,9 @@ var authCmd = &cobra.Command{
   # 查看授权状态
   feishu-cli auth status
 
+  # 输出当前有效 token
+  feishu-cli auth token -o json
+
   # 退出登录
   feishu-cli auth logout`,
 }

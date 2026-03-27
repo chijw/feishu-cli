@@ -190,7 +190,11 @@ feishu-cli config init
 # http://127.0.0.1:9768/callback
 
 # 一键 OAuth 登录
+# 默认会请求推荐 scope 集，并自动包含 offline_access 以支持自动刷新
 feishu-cli auth login
+
+# 插件 / AI Agent 可直接读取当前有效 token
+feishu-cli auth token -o json
 ```
 
 ### 验证安装
@@ -472,18 +476,24 @@ feishu-cli search docs "产品需求"
 # 登录授权（自动打开浏览器完成 OAuth）
 feishu-cli auth login
 
+# 默认情况下会请求推荐 scope 集，并自动包含 offline_access
+
 # SSH 远程环境使用手动模式
 feishu-cli auth login --manual
 
 # 指定端口（默认 9768）
 feishu-cli auth login --port 8080
 
-# 指定 OAuth scope（建议加 offline_access 以获取 Refresh Token）
-feishu-cli auth login --scopes "search:docs:read search:message offline_access"
+# 指定 OAuth scope（会自动补 offline_access）
+feishu-cli auth login --scopes "search:docs:read search:message"
 
 # 非交互模式（AI Agent 推荐，不阻塞 stdin）
 feishu-cli auth login --print-url                # 步骤 1：输出授权 URL 和 state
 feishu-cli auth callback "<回调URL>" --state "<state>"  # 步骤 2：用回调 URL 换 token
+
+# 输出当前有效 token
+feishu-cli auth token
+feishu-cli auth token -o json  # JSON 格式输出，适合插件 / AI Agent
 
 # 查看当前授权状态
 feishu-cli auth status
@@ -496,7 +506,8 @@ feishu-cli auth logout
 **Token 管理**：
 - Token 保存在 `~/.feishu-cli/token.json`，Access Token 有效期约 2 小时
 - Access Token 过期时自动使用 Refresh Token 刷新（Refresh Token 有效期 30 天）
-- **重要**：登录时需包含 `offline_access` scope 才会返回 Refresh Token，否则 2 小时后需重新登录
+- `auth login` 默认会请求推荐 scope 集，并自动包含 `offline_access`
+- 显式传入 `--scopes` 时也会自动补 `offline_access`
 - Token 优先级：`--user-access-token` 参数 > `FEISHU_USER_ACCESS_TOKEN` 环境变量 > `token.json` > `config.yaml`
 
 </details>
@@ -649,9 +660,9 @@ npx skills add riba2534/feishu-cli --global --yes --agent claude-code --copy
 | 任务 | `task:task:read`, `task:task:write` | 需单独申请 |
 | 任务列表 | `task:tasklist:read`, `task:tasklist:write` | 任务列表管理 |
 | 搜索消息/应用 | 需要 User Access Token | 通过 `auth login` 或手动获取 |
-| 搜索文档 | 需要 User Access Token | 通过 `auth login` 或手动获取，支持 `search:read` 权限 |
-| 读取他人文档（User 身份） | `docx:document:readonly`（User scope） | 通过 `feishu-cli auth login --scopes "docx:document:readonly offline_access"` 授权 |
-| 搜索云文档（User 身份） | `search:docs:read`（User scope） | 通过 `feishu-cli auth login --scopes "search:docs:read offline_access"` 授权 |
+| 搜索文档 | 需要 User Access Token | 通过 `auth login` 或手动获取，支持 `search:docs:read` 权限 |
+| 读取他人文档（User 身份） | `docx:document:readonly`（User scope） | 通过 `feishu-cli auth login --scopes "docx:document:readonly"` 授权 |
+| 搜索云文档（User 身份） | `search:docs:read`（User scope） | 通过 `feishu-cli auth login --scopes "search:docs:read"` 授权 |
 | 离线刷新 Token | `offline_access`（User scope） | 与其他 scope 一起传入，获取 Refresh Token 以自动续期 |
 
 ### 无需审批权限快捷导入

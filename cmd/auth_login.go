@@ -41,8 +41,8 @@ Authorization Code Flow 前置条件:
   # 指定端口
   feishu-cli auth login --port 8080
 
-  # 指定 scope（建议带 offline_access 以获取 refresh_token）
-  feishu-cli auth login --scopes "search:docs:read search:message offline_access"
+  # 指定 scope（会自动补 offline_access）
+  feishu-cli auth login --scopes "search:docs:read search:message"
 
   # 非交互模式（AI Agent 推荐）
   feishu-cli auth login --print-url
@@ -58,6 +58,7 @@ Authorization Code Flow 前置条件:
 
 		cfg := config.Get()
 		scopes, _ := cmd.Flags().GetString("scopes")
+		scopes = auth.NormalizeLoginScopes(scopes)
 		method, _ := cmd.Flags().GetString("method")
 
 		switch method {
@@ -186,6 +187,6 @@ func init() {
 	authLoginCmd.Flags().Bool("manual", false, "强制使用手动粘贴模式（Authorization Code Flow）")
 	authLoginCmd.Flags().Bool("no-manual", false, "强制使用本地回调模式（Authorization Code Flow）")
 	authLoginCmd.Flags().Bool("print-url", false, "仅输出授权 URL 和 state（Authorization Code Flow 非交互模式）")
-	authLoginCmd.Flags().String("scopes", "", "请求的 OAuth scope（空格分隔，如 \"search:docs:read offline_access\"）")
+	authLoginCmd.Flags().String("scopes", "", "请求的 OAuth scope（空格分隔；留空时默认使用推荐 scope 集，并自动补 offline_access）")
 	authLoginCmd.Flags().String("method", "code", "授权方式：code（Authorization Code Flow）或 device（Device Flow，无需配置重定向 URL）")
 }
