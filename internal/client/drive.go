@@ -235,7 +235,7 @@ type DriveFile struct {
 }
 
 // ListFiles 列出文件夹中的文件
-func ListFiles(folderToken string, pageSize int, pageToken string) ([]*DriveFile, string, bool, error) {
+func ListFiles(folderToken string, pageSize int, pageToken string, userAccessToken string) ([]*DriveFile, string, bool, error) {
 	client, err := GetClient()
 	if err != nil {
 		return nil, "", false, err
@@ -252,7 +252,7 @@ func ListFiles(folderToken string, pageSize int, pageToken string) ([]*DriveFile
 		reqBuilder.PageToken(pageToken)
 	}
 
-	resp, err := client.Drive.File.List(Context(), reqBuilder.Build())
+	resp, err := client.Drive.File.List(Context(), reqBuilder.Build(), UserTokenOption(userAccessToken)...)
 	if err != nil {
 		return nil, "", false, fmt.Errorf("获取文件列表失败: %w", err)
 	}

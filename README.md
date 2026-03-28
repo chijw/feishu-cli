@@ -191,6 +191,7 @@ feishu-cli config init
 
 # 一键 OAuth 登录
 # 默认会请求推荐 scope 集，并自动包含 offline_access 以支持自动刷新
+# 推荐 scope 集覆盖文档搜索、知识库浏览、云盘只读、IM、日历和任务等通用交互能力
 feishu-cli auth login
 
 # 插件 / AI Agent 可直接读取当前有效 token

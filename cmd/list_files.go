@@ -38,8 +38,9 @@ var listFilesCmd = &cobra.Command{
 
 		pageSize, _ := cmd.Flags().GetInt("page-size")
 		output, _ := cmd.Flags().GetString("output")
+		userAccessToken := resolveOptionalUserTokenWithFallback(cmd)
 
-		files, _, _, err := client.ListFiles(folderToken, pageSize, "")
+		files, _, _, err := client.ListFiles(folderToken, pageSize, "", userAccessToken)
 		if err != nil {
 			return err
 		}
@@ -99,4 +100,5 @@ func init() {
 	fileCmd.AddCommand(listFilesCmd)
 	listFilesCmd.Flags().Int("page-size", 50, "每页数量")
 	listFilesCmd.Flags().StringP("output", "o", "", "输出格式（json）")
+	listFilesCmd.Flags().String("user-access-token", "", "User Access Token（可选，用于访问个人云空间）")
 }
